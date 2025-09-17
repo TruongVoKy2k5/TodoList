@@ -1,5 +1,5 @@
 import {useState} from "react";
-export default function todoInput() {
+export default function TodoInput() {
     const [text, setText] = useState("");
     function handleOnchangeInput(event){
         setText(event.target.value);
