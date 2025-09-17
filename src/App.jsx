@@ -1,13 +1,19 @@
 import { useState } from 'react'
 import './App.css'
-import todoInput from "/ToDo/todoInput.jsx";
+import todoInput from "/components/TodoInput.jsx";
+
 
 function App() {
-  const [count, setCount] = useState(0)
   const [todo, setTodo] = useState([]);
 
-  function addTodo(){
-
+  const addTodo (text) => {
+    setTodo([...todo, {
+      todo = {
+        id: Date.now(),
+        text,
+        completed: false
+      }
+    }])
   }
   return;
 }
