@@ -1,21 +1,20 @@
-import { useState } from 'react'
+import { useState, createContext, Children } from 'react'
 import './App.css'
-import todoInput from "/components/TodoInput.jsx";
-
-
-function App() {
-  const [todo, setTodo] = useState([]);
-
-  const addTodo (text) => {
-    setTodo([...todo, {
-      todo = {
-        id: Date.now(),
-        text,
-        completed: false
-      }
-    }])
-  }
-  return;
+import TodoForm from './components/todoForm.jsx';
+import TodoList from './components/todoList.jsx';
+const TodoContext = createContext();
+export default function App() {
+  return(
+      <TodoContext.Provider value={{todos, addTodo, toggleTodo, deleteTodo, newText}}>
+        <div className="app">
+          <h1>To do app</h1>
+          <TodoForm/>
+          <TodoList/>
+        </div>
+      </TodoContext.Provider>
+  )
 }
+export {TodoContext};
 
-export default App
+
+
