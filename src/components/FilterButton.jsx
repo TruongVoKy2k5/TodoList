@@ -1,12 +1,7 @@
 import { useContext } from "react";
 import { TodoContext } from "../App";
 export default function FilterButton(){
-    const {todos, filter, setFilter} = useContext(TodoContext);
-    const filterTodos = todos.filter((todo) => {
-        if(filter === "active") return !todo.completed;
-        if(filter === "completed") return todo.completed;
-        return true;
-    })
+    const {filter, setFilter} = useContext(TodoContext);
     return (
         <div>
             <button onClick={() => setFilter("all")}>All</button>
