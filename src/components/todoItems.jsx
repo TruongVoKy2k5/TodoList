@@ -15,7 +15,7 @@
                     {todoCounter.total > 0 && <p>Total: {todoCounter.total}</p>}
                     {todoCounter.active > 0 && <p>Active: {todoCounter.active}</p>}
                     {todoCounter.completed > 0 && <p>Completed: {todoCounter.completed}</p>}
-                    <button onClick={() => clearCompleted(todo.id)}>Clear all the completed task!</button>
+                    <button onClick={() => clearCompleted()}>Clear all the completed task!</button>
                 <ul>
                     {filterTodos.map(todo => (
                         <TodoItem key={todo.id} todo={todo} toggleTodo={toggleTodo} deleteTodo={deleteTodo} updateTodo={updateTodo}/>
@@ -31,8 +31,14 @@
             const [editText, setEditText] = useState(todo.text);
 
             const handleSave = () => {
-                if(!editText.trim()) return;
-                updateTodo(todo.id, editText);
+                if(!editText.trim()) return alert("It can't be blank");
+                if(editText.length() < 3){
+                    alert("The text is too short!")
+                }
+                if(editText.length() > 100){
+                    alert("The text is too long!")
+                }
+                updateTodo(todo.id.trim(), editText);
                 setIsEditing(false);
             };
             
@@ -40,13 +46,28 @@
                 <li>
                 {isEditing ? (
                     <>
-                <input value={editText} onChange={(e) => setEditText(e.target.value)}/>
-                <button onClick={handleSave}>Save</button>
-                <button onClick={() => setIsEditing(false)}>Cancel</button> 
-                </>
+                        <input 
+                            value={editText} 
+                            onChange={(e) => setEditText(e.target.value)} 
+                            onKeyDown={(e) => {if(e.key === "Enter") handleSave(); 
+                                else if(e.key === "Escape") {
+                                    setIsEditing(false);
+                                    setEditText(todo.text)
+                                }
+                            }}
+                            autoFocus   
+                        />
+                
+                
+                    <button onClick={handleSave}>Save</button>
+                    <button onClick={() => setIsEditing(false)}>Cancel</button> 
+                    </>
                 ) : (
                     <>
                         <span onClick={() => toggleTodo(todo.id)}>{todo.text}</span>
+                        <div>
+                            <span>{new Date(todo.deadline).toLocaleDateString("vi-VN")}</span>
+                        </div>
                         <button onClick={() => setIsEditing(true)}>Edit</button>
                         <button onClick={() => deleteTodo(todo.id)}>Delete</button>
                     </>
