@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 export default function useTodos(filter) {
     const [todos, setTodos] = useState([]);
-    
 
     useEffect (() => {
         const savedTodos = localStorage.getItem("todos");
@@ -25,12 +24,14 @@ export default function useTodos(filter) {
         return total;
     }, {total: 0, completed: 0, active: 0});
 
-    const addTodo = (text, deadline) => {
+    const addTodo = (text, deadline, priority) => {
+        console.log("Adding todo with priority:", priority);
         setTodos([...todos, {
                 id: Date.now(),
                 text,
+                priority,
                 deadline,
-                completed: false
+                completed: false,
             }]);
     }
 
@@ -61,7 +62,16 @@ export default function useTodos(filter) {
         return true;
     })
 
+    const filterPriority = todos.filter((todo) => {
+        if(todo.priority === "high") return "high";
+        if(filter === "medium") return "medium";
+        return "low";
+    })
+
     return {
-        todos, filter, addTodo, todoCounter, filterTodos, updateTodo, deleteTodo, toggleTodo, toggleAll, clearCompleted
+        todos, filter, addTodo, todoCounter, filterTodos, updateTodo, 
+        deleteTodo, toggleTodo, toggleAll, clearCompleted, setPriorityColor,
+        filterPriority
     }
+
 }

@@ -2,7 +2,7 @@
         import { TodoContext } from "../App";
         import FilterButton from "./FilterButton";
         export default function TodoItems(){
-            const {todos, toggleTodo, deleteTodo, updateTodo, filterTodos, todoCounter, clearCompleted, toggleAll} = useContext(TodoContext);
+            const {todos, toggleTodo, deleteTodo, updateTodo, filterTodos, todoCounter, clearCompleted, toggleAll, filterPriority} = useContext(TodoContext);
             return (
                 <div>
                     <FilterButton/>
@@ -21,24 +21,37 @@
                         <TodoItem key={todo.id} todo={todo} toggleTodo={toggleTodo} deleteTodo={deleteTodo} updateTodo={updateTodo}/>
                     ))}
                 </ul>
-
+                <ul>
+                    {filterPriority.map(todo => {
+                        <TodoItem key={todo.id} todo={todo} toggleTodo={toggleTodo} deleteTodo={deleteTodo} updateTodo={updateTodo}/>
+                    })}
+                </ul>
                 </div>
             )
         };
-
+        
         function TodoItem({todo, toggleTodo, deleteTodo, updateTodo}) {
             const [isEditing, setIsEditing] = useState(false);
             const [editText, setEditText] = useState(todo.text);
-
+            const setPriorityColor = (priority) => {
+                console.log("Getting color for priority:", priority);
+                switch(priority) {
+                    case 'high': return "red";
+                    case 'medium': return "yellow";
+                    case 'low': return "blue";
+                    default : return "gray";
+                }
+            }
+            
             const handleSave = () => {
                 if(!editText.trim()) return alert("It can't be blank");
-                if(editText.length() < 3){
-                    alert("The text is too short!")
+                if(editText.trim().length < 3){
+                   return alert("The text is too short!")
                 }
-                if(editText.length() > 100){
-                    alert("The text is too long!")
+                if(editText.trim().length > 100){
+                   return alert("The text is too long!")
                 }
-                updateTodo(todo.id.trim(), editText);
+                updateTodo(todo.id, editText.trim());
                 setIsEditing(false);
             };
             
@@ -56,7 +69,7 @@
                                 }
                             }}
                             autoFocus   
-                        />
+                            />
                 
                 
                     <button onClick={handleSave}>Save</button>
@@ -66,6 +79,7 @@
                     <>
                         <span onClick={() => toggleTodo(todo.id)}>{todo.text}</span>
                         <div>
+                            <span style={{color: setPriorityColor(todo.priority)}}>Priority: {todo.priority || "medium"}</span>
                             <span>{new Date(todo.deadline).toLocaleDateString("vi-VN")}</span>
                         </div>
                         <button onClick={() => setIsEditing(true)}>Edit</button>
